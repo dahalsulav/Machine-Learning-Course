@@ -1,42 +1,46 @@
 import numpy as np
+import random
 
-class Perceptron:
-    def __init__(self, no_of_inputs, inputs, labels, bias=-2, epochs=10, learning_rate=0.1):
-        self.inputs = inputs
-        self.labeled_outputs = labels
-        self.bias = bias
-        self.epochs = epochs
-        self.l_rate = learning_rate
-        self.weights = np.random.rand(1, no_of_inputs) # random numbers from 0 to 1
+def activation_function(weighted_sum):
+    if weighted_sum > 0:
+        return 1
+    elif weighted_sum < 0:
+        return 0
 
-    #predict the output based on the dot product of weights to input
-    def predict(self, each_input):
-        return np.dot(self.weights[:], each_input) + self.bias
+def perceptron(gate):
+    bias = (1,) # the bias is always one
+    learning_rate = 0.1
+    epochs = 50 # how many times the machine learns
+    weights = []
 
-    #step function
-    def activation(self, inpt):
-        prediction = self.predict(inpt)
-        if prediction > 0:
-            output = 1
-        else:
-            output = 0
-        return output
+    # appending 3 random weights between 0 and 1, one for each input and one for the bias
+    for i in range(3):
+        weights.append(random.uniform(0, 1))
 
-    #train the perceptron
-    def train(self):
-        for cycle in range(self.epochs):
-            for each_inp, each_out in zip(self.inputs, self.labeled_outputs):
-                self.weights[:] += self.l_rate * (each_out - self.activation(each_inp)) * each_inp
+    for i in range(epochs):
+        inputs, expected_output = random.choice(gate)
+        inputs = inputs + bias # adding the bias here
+        weighted_sum = np.dot(inputs, weights)
+        guess = activation_function(weighted_sum) # finding the sign of the weighted sum
+        error = expected_output - guess
+        weights += learning_rate * error * np.asarray(inputs) # changing the weights to include the error times input, won't change if there's no error
 
-inputs = np.array([[0,0], [1,0], [0,1], [1,1]])
-AND_Outputs = [0,0,0,1]
+    inputs, expected_output = random.choice(gate)
+    print("inputs: " + str(inputs))
+    inputs = inputs + bias
+    weighted_sum = np.dot(inputs, weights)
+    print("Weighted sum: " + str(weighted_sum))
+    print("Expected output: " + str(expected_output))
+    print("Perceptron guess: " + str(activation_function(weighted_sum)) + '\n')
 
-def testing_all_inputs(no_of_inputs, inputs, output_labels, bias=-2):
-    perceptron = Perceptron(no_of_inputs, inputs, output_labels, bias)
-    perceptron.train()
+and_gate = [
+    # [(inputs), expected output]
+    [(0, 0), 0],
+    [(0, 1), 0],
+    [(1, 0), 0],
+    [(1, 1), 1]
+]
 
-    for each in inputs:
-        print(perceptron.activation(each))
-
-print("AND Gate Output")
-testing_all_inputs(2, inputs, AND_Outputs)
+for i in range(4):
+    print("AND Gate")
+    perceptron(and_gate)

@@ -32,7 +32,7 @@ class LinearRegression:
 
             # update weight and bias i.e. w = w - α * dw & b = b - α * db
             self.w -= self.lr * dw
-            self.b -= self.lr * dw
+            self.b -= self.lr * db
 
     def predict(self, X):
         """ calculate predicted value

@@ -48,8 +48,17 @@ class LinearRegression:
         return y_pred
 
     # implementing cost function using mean square error
-    def mean_square_error(y_pred, y):
-        np.mean((y - y_pred) ** 2)
+    def mean_squared_error(y_pred, y):
+        """cost function calculation
+
+        Args:
+            y_pred (_type_): _description_
+            y (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        return np.mean((y - y_pred) ** 2)
 
 
 # linear_reg = LinearRegression()
